@@ -1,13 +1,13 @@
 const storage: Storage = (typeof (cc) !== 'undefined' && cc.sys && cc.sys.localStorage)
     ? cc.sys.localStorage  // compatibility with cocos creator
-    : window.localStorage; // regular browser environment
+    : (typeof(window) != 'undefined') ? window.localStorage : null; // regular browser environment
 
 export function setItem(key: string, value: string) {
-    storage.setItem(key, value);
+    storage && storage.setItem(key, value);
 }
 
 export function getItem(key: string, callback: Function) {
-    const value: any = storage.getItem('colyseusid');
+    const value: any = storage && storage.getItem('colyseusid');
 
     if (
         typeof (Promise) === 'undefined' || // old browsers
