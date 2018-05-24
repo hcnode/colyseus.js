@@ -5,7 +5,13 @@ import { Connection } from './Connection';
 import { Protocol } from './Protocol';
 import { RECONNECTION_KEY, Room, RoomAvailable } from './Room';
 import { getItem, setItem } from './Storage';
-
+function fixData(data){
+    if(/(\d*,){2,}/.test(data)){
+        var roomIdArr = data.split(',');
+        return String.fromCharCode.apply(null, roomIdArr.slice(3, roomIdArr.length - 1));
+    }
+    return data;
+}
 export class Client {
     public id?: string;
 
@@ -114,9 +120,10 @@ export class Client {
         const code = message[0];
 
         if (code === Protocol.USER_ID) {
-            setItem('colyseusid', message[1]);
 
             this.id = message[1];
+            this.id = fixData(this.id)
+            setItem('colyseusid', this.id);
             this.onOpen.dispatch();
 
         } else if (code === Protocol.JOIN_ROOM) {
@@ -129,6 +136,7 @@ export class Client {
             }
 
             room.id = message[1];
+            room.id = fixData(room.id)
             this.rooms[room.id] = room;
 
             room.connect(this.createConnection(room.id, room.options));
