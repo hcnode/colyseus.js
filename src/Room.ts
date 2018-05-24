@@ -86,7 +86,7 @@ export class Room<T= any> extends StateContainer<T & any> {
     }
 
     protected onMessageCallback(event) {
-        const message = msgpack.decode( new Uint8Array(event.data) );
+        var message = (typeof Buffer != 'undefined') ? msgpack.decode((Buffer.from(event.data))) : msgpack.decode(new Uint8Array(event.data));
         const code = message[0];
 
         if (code === Protocol.JOIN_ROOM) {
