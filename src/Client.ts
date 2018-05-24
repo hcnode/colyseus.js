@@ -103,7 +103,7 @@ export class Client {
             params.push(`${name}=${options[name]}`);
         }
 
-        return new Connection(`${this.hostname}/${path}?${params.join('&')}`);
+        return new Connection(`${this.hostname}/socket.io/${path}?${params.join('&')}`);
     }
 
     /**
