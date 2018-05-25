@@ -19,7 +19,8 @@ export declare class Client {
     protected roomsAvailableRequests: {
         [requestId: number]: (value?: RoomAvailable[]) => void;
     };
-    constructor(url: string);
+    protected option: any;
+    constructor(url: string, option?: any);
     join<T>(roomName: string, options?: any): Room<T>;
     getAvailableRooms(roomName: string, callback: (rooms: RoomAvailable[], err?: string) => void): void;
     close(): void;

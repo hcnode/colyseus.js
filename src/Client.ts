@@ -7,7 +7,7 @@ import { RECONNECTION_KEY, Room, RoomAvailable } from './Room';
 import { getItem, setItem } from './Storage';
 export class Client {
     public id?: string;
-
+    
     // signals
     public onOpen: Signal = new Signal();
     public onMessage: Signal = new Signal();
@@ -23,8 +23,11 @@ export class Client {
     protected hostname: string;
     protected roomsAvailableRequests: {[requestId: number]: (value?: RoomAvailable[]) => void} = {};
 
-    constructor(url: string) {
+    protected option : any
+
+    constructor(url: string, option?) {
         this.hostname = url;
+        this.option = option || {};
         getItem('colyseusid', (colyseusid) => this.connect(colyseusid));
     }
 
@@ -101,8 +104,11 @@ export class Client {
             }
             params.push(`${name}=${options[name]}`);
         }
+        if(this.option.pathParams){
+            params.push(...this.option.pathParams)
+        }
 
-        return new Connection(`${this.hostname}/socket.io/${path}?${params.join('&')}`);
+        return new Connection(`${this.hostname}${this.option.basePath || ''}/${path}?${params.join('&')}`);
     }
 
     /**
